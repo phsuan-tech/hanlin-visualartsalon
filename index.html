@@ -19,13 +19,13 @@
             background: radial-gradient(circle at 10% 20%, rgba(244, 237, 222, 0.4) 0%, rgba(253, 251, 247, 1) 90%);
             background-color: #fdfbf7;
             height: 100vh; 
-            overflow: hidden; 
+            overflow: hidden; /* 橫式電腦版外層不捲動，由主舞台容器內部捲動 */
             color: #4a3e3d; 
             padding: 20px; 
             box-sizing: border-box; 
         }
 
-        /* ─── 🎨 頂部標題欄（🚀 已移除多餘的星星裝飾） ─── */
+        /* ─── 🎨 頂部標題欄 ─── */
         #main-header { 
             background: rgba(255, 255, 255, 0.85); 
             backdrop-filter: blur(10px);
@@ -67,36 +67,36 @@
             -webkit-backdrop-filter: blur(10px);
             border: 1.5px solid #eae1d4;
             border-radius: 35px; 
-            padding: 20px;
+            padding: 25px;
             box-sizing: border-box;
-            overflow-y: auto; 
+            overflow-y: auto; /* 🚀 開啟主舞台垂直捲軸，讓剩餘卡牌可以向下滑動 */
             position: relative;
             display: flex;
             justify-content: center;
-            align-items: center; 
+            align-items: flex-start; /* 改為頂部對齊，確保向下滑動時內容正常滾動 */
         }
 
-        /* 橫式大螢幕固定 6x4 網格佈局 */
+        /* 🚀 橫式大螢幕網格佈局重構：單一畫面完美呈現 5 欄、2 排（共10張） */
         .grid-layout {
             display: grid;
-            grid-template-columns: repeat(6, 1fr); 
-            grid-template-rows: repeat(4, 1fr);    
-            gap: 15px;
+            grid-template-columns: repeat(5, 1fr); /* 固定橫向 5 張 */
+            grid-template-rows: repeat(2, 1fr);    /* 單一畫面只容納 2 排，多出的自動往下長 */
+            gap: 24px; /* 放大卡牌間距，排版大器清爽 */
             width: 100%;
-            height: 100%;
             max-width: 1150px;
-            max-height: calc(100vh - 170px); 
             margin: 0 auto;
             align-items: center;
             justify-items: center;
+            padding-bottom: 30px; /* 底部留白 */
         }
 
-        /* ─── 🎨 基礎卡牌樣式 ─── */
+        /* ─── 🎨 基礎卡牌樣式（🚀 電腦版極致放大修正） ─── */
         .card-item {
             perspective: 1000px;
-            height: 100%;
-            width: auto;
-            max-height: calc((100vh - 240px) / 4); 
+            width: 100%; 
+            height: auto;
+            /* 🚀 智慧高度控制：讓單一畫面高度剛好舒服塞下兩排大卡，且鎖死直式 6:8 比例不變形 */
+            max-height: calc((100vh - 260px) / 2); 
             aspect-ratio: 6 / 8; 
             box-sizing: border-box;
         }
@@ -112,13 +112,13 @@
             text-align: center;
             transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             transform-style: preserve-3d;
-            border-radius: 16px; 
-            box-shadow: 0 4px 10px rgba(165, 153, 140, 0.1); 
+            border-radius: 18px; /* 放大後更圓潤 */
+            box-shadow: 0 6px 15px rgba(165, 153, 140, 0.12); 
         }
         
         .card-item.active-card:hover .card-inner {
-            transform: translateY(-5px) scale(1.03); 
-            box-shadow: 0 10px 20px rgba(165, 153, 140, 0.2);
+            transform: translateY(-6px) scale(1.03); 
+            box-shadow: 0 14px 28px rgba(165, 153, 140, 0.22);
         }
         
         .card-inner.flipped {
@@ -131,7 +131,7 @@
             height: 100%;
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
-            border-radius: 16px;
+            border-radius: 18px;
             overflow: hidden;
             border: 1.5px solid #eae1d4;
             background: #fffbf5; 
@@ -142,7 +142,7 @@
         }
         
         .card-item.empty-card .card-face {
-            border: 1.5px dashed #decbb7;
+            border: 1.8px dashed #decbb7;
             background: rgba(255, 255, 255, 0.3);
         }
         
@@ -155,20 +155,20 @@
         /* 卡牌首頁底部文字標籤 */
         .card-info-tag {
             position: absolute;
-            bottom: 8px; left: 8px; right: 8px;
-            background: rgba(255, 255, 255, 0.9);
+            bottom: 10px; left: 10px; right: 10px;
+            background: rgba(255, 255, 255, 0.92);
             border: 1px solid #eae1d4;
             color: #5c4e4d;
-            font-size: 11px;
+            font-size: 12px; /* 稍微放大字體配合大圖卡 */
             font-weight: bold;
-            padding: 4px;
-            border-radius: 8px;
+            padding: 6px;
+            border-radius: 10px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             z-index: 10;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
         }
 
         /* ─── 🎨 霧面毛玻璃放大遮罩層 ─── */
@@ -197,7 +197,6 @@
 
         /* 左側：放大卡牌容器與控制 */
         .lightbox-left {
-            flex: 1;
             height: 100%;
             max-height: 80vh;
             display: flex;
@@ -213,7 +212,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
+            width: 120%;
             max-width: 380px;
         }
 
@@ -285,7 +284,7 @@
         .flip-hint-btn:hover {
             background: #8fa88b;
             transform: translateY(-1px);
-            box-shadow: 0 6px 15px rgba(159, 184, 155, 0.4);
+            box-shadow: 0 6px 15px rgba(159, 184, 155, 0.45);
         }
 
         /* 右側：文字介紹欄 */
@@ -382,7 +381,6 @@
             #main-header .sub-title { font-size: 11px; }
             #main-header .main-title { font-size: 14px; }
 
-            /* 主舞台隨格子數量自動延伸 */
             #gallery-container { 
                 padding: 15px; 
                 border-radius: 24px; 
@@ -391,15 +389,22 @@
                 align-items: flex-start;
             }
             
-            /* 直式畫面雙欄佈局 */
+            /* 直式手機畫面：維持放大版雙欄排版並流暢滾動 */
             .grid-layout {
                 grid-template-columns: repeat(2, 1fr);
                 grid-template-rows: auto;
                 max-height: none;
                 gap: 12px;
                 height: auto;
+                width: 100%;
+                padding: 0 4px;
             }
-            .card-item { max-height: none; width: 100%; height: auto; }
+            .card-item { 
+                max-height: none; 
+                width: 100%; 
+                height: auto; 
+                aspect-ratio: 6 / 8 !important; 
+            }
 
             /* 燈箱在直式裝置下改為覆蓋全螢幕的固定層 */
             #lightbox-overlay { padding: 15px; border-radius: 24px; overflow-y: auto; position: fixed; height: 100vh; }
@@ -494,10 +499,11 @@
     let cardDataList = [];
     let currentLightboxIndex = -1; 
 
+    // 初始化建立 20 張空白底卡 (5x4)
     function initEmptyGrid() {
         const gridView = document.getElementById('grid-view');
         gridView.innerHTML = '';
-        for (let i = 0; i < 24; i++) {
+        for (let i = 0; i < 20; i++) {
             const emptyCard = document.createElement('div');
             emptyCard.className = 'card-item empty-card'; 
             emptyCard.innerHTML = `
@@ -509,6 +515,7 @@
         }
     }
 
+    // CSV 解析引擎
     function parseCSV(text) {
         let lines = [];
         let row = [""];
@@ -533,6 +540,7 @@
         return lines;
     }
 
+    // 載入雲端資料
     async function loadCloudGalleryData() {
         try {
             const response = await fetch(SHEET_URL);
@@ -554,7 +562,7 @@
                 }
             });
 
-            cardDataList = tempCards.slice(0, 24);
+            cardDataList = tempCards.slice(0, 20);
             updateGalleryGrid();
             
             if (document.getElementById('lightbox-overlay').style.display === 'block' && currentLightboxIndex !== -1) {
@@ -568,11 +576,12 @@
         }
     }
 
+    // 渲染覆蓋至 20 個格子上
     function updateGalleryGrid() {
         const gridView = document.getElementById('grid-view');
         gridView.innerHTML = '';
 
-        for (let i = 0; i < 24; i++) {
+        for (let i = 0; i < 20; i++) {
             const cardItem = document.createElement('div');
             
             if (i < cardDataList.length) {
@@ -613,6 +622,7 @@
         }
     }
 
+    // 填入資料至燈箱
     function fillLightboxData(index) {
         const card = cardDataList[index];
         if(!card) return;
