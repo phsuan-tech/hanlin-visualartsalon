@@ -19,7 +19,7 @@
             background: radial-gradient(circle at 10% 20%, rgba(244, 237, 222, 0.4) 0%, rgba(253, 251, 247, 1) 90%);
             background-color: #fdfbf7;
             height: 100vh; 
-            overflow: hidden; /* 橫式電腦版外層不捲動，由主舞台容器內部捲動 */
+            overflow: hidden; 
             color: #4a3e3d; 
             padding: 20px; 
             box-sizing: border-box; 
@@ -69,33 +69,32 @@
             border-radius: 35px; 
             padding: 25px;
             box-sizing: border-box;
-            overflow-y: auto; /* 🚀 開啟主舞台垂直捲軸，讓剩餘卡牌可以向下滑動 */
+            overflow-y: auto; 
             position: relative;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* 改為頂部對齊，確保向下滑動時內容正常滾動 */
+            align-items: flex-start; 
         }
 
-        /* 🚀 橫式大螢幕網格佈局重構：單一畫面完美呈現 5 欄、2 排（共10張） */
+        /* 橫式大螢幕網格佈局（5x4 排版） */
         .grid-layout {
             display: grid;
-            grid-template-columns: repeat(5, 1fr); /* 固定橫向 5 張 */
-            grid-template-rows: repeat(2, 1fr);    /* 單一畫面只容納 2 排，多出的自動往下長 */
-            gap: 24px; /* 放大卡牌間距，排版大器清爽 */
+            grid-template-columns: repeat(5, 1fr); 
+            grid-template-rows: repeat(2, 1fr);    
+            gap: 24px; 
             width: 100%;
             max-width: 1150px;
             margin: 0 auto;
             align-items: center;
             justify-items: center;
-            padding-bottom: 30px; /* 底部留白 */
+            padding-bottom: 30px; 
         }
 
-        /* ─── 🎨 基礎卡牌樣式（🚀 電腦版極致放大修正） ─── */
+        /* ─── 🎨 基礎卡牌樣式 ─── */
         .card-item {
             perspective: 1000px;
             width: 100%; 
             height: auto;
-            /* 🚀 智慧高度控制：讓單一畫面高度剛好舒服塞下兩排大卡，且鎖死直式 6:8 比例不變形 */
             max-height: calc((100vh - 260px) / 2); 
             aspect-ratio: 6 / 8; 
             box-sizing: border-box;
@@ -112,7 +111,7 @@
             text-align: center;
             transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             transform-style: preserve-3d;
-            border-radius: 18px; /* 放大後更圓潤 */
+            border-radius: 18px; 
             box-shadow: 0 6px 15px rgba(165, 153, 140, 0.12); 
         }
         
@@ -159,7 +158,7 @@
             background: rgba(255, 255, 255, 0.92);
             border: 1px solid #eae1d4;
             color: #5c4e4d;
-            font-size: 12px; /* 稍微放大字體配合大圖卡 */
+            font-size: 12px; 
             font-weight: bold;
             padding: 6px;
             border-radius: 10px;
@@ -171,7 +170,7 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.04);
         }
 
-        /* ─── 🎨 霧面毛玻璃放大遮罩層 ─── */
+        /* ─── 🎨 霧面毛玻璃放大遮罩層（純淨白霧燈箱） ─── */
         #lightbox-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -181,7 +180,7 @@
             border-radius: 35px;
             z-index: 500;
             display: none; 
-            padding: 40px;
+            padding: 30px 50px; /* 🚀 增加左右內邊距，留出切換按鈕的伸展空間 */
             box-sizing: border-box;
         }
 
@@ -189,22 +188,23 @@
             display: flex;
             width: 100%;
             height: 100%;
-            gap: 50px;
+            gap: 40px;
             align-items: center;
             justify-content: center;
             position: relative;
         }
 
-        /* 左側：放大卡牌容器與控制 */
+        /* 🚀 左側：固定卡牌展示區寬度，絕不被右側文字框壓縮擠扁 */
         .lightbox-left {
+            width: 40%;
+            max-width: 420px;
             height: 100%;
-            max-height: 80vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             gap: 20px;
-            position: relative;
+            flex-shrink: 0; /* 強制不縮小 */
         }
         
         .lightbox-card-wrapper {
@@ -212,14 +212,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 120%;
-            max-width: 380px;
+            width: 100%;
         }
 
         .lightbox-card {
             width: 100%;
-            height: 100%;
-            max-height: 500px;
+            height: auto;
+            max-height: 520px;
             aspect-ratio: 6 / 8;
             box-shadow: 0 15px 35px rgba(165, 153, 140, 0.25); 
         }
@@ -227,7 +226,7 @@
             transform: rotateY(180deg);
         }
 
-        /* 左右跳轉按鈕 */
+        /* 🚀 左右跳轉按鈕：微調位置，避免被卡片或外層遮擋 */
         .side-nav-btn {
             position: absolute;
             top: 50%;
@@ -235,8 +234,8 @@
             background: #ffffff;
             color: #8c7e7c;
             border: 1.5px solid #eae1d4;
-            width: 46px;
-            height: 46px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             font-size: 16px;
             cursor: pointer;
@@ -244,7 +243,7 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-            z-index: 600;
+            z-index: 650;
             box-shadow: 0 4px 10px rgba(165, 153, 140, 0.15);
         }
         .side-nav-btn:hover {
@@ -253,8 +252,8 @@
             border-color: #decbb7;
             transform: translateY(-50%) scale(1.08);
         }
-        .prev-card-btn { left: -65px; } 
-        .next-card-btn { right: -65px; } 
+        .prev-card-btn { left: -55px; } /* 移至精準定位 */
+        .next-card-btn { right: -55px; } 
 
         /* 底部按鈕群組容器 */
         .lightbox-action-row {
@@ -287,9 +286,9 @@
             box-shadow: 0 6px 15px rgba(159, 184, 155, 0.45);
         }
 
-        /* 右側：文字介紹欄 */
+        /* 🚀 右側：文字介紹欄（優化分配寬度，與左側完美平衡） */
         .lightbox-right {
-            flex: 1;
+            width: 60%;
             display: flex;
             flex-direction: column;
             background: #ffffff;
@@ -364,7 +363,7 @@
             font-weight: bold;
         }
 
-        /* ─── 📱 RWD 與直式畫面滑動優化 ─── */
+        /* ─── 📱 RWD 與直式畫面滑動優化（不受橫式固定欄位寬度影響） ─── */
         @media (max-width: 900px), (orientation: portrait) {
             body { 
                 height: auto; 
@@ -389,7 +388,6 @@
                 align-items: flex-start;
             }
             
-            /* 直式手機畫面：維持放大版雙欄排版並流暢滾動 */
             .grid-layout {
                 grid-template-columns: repeat(2, 1fr);
                 grid-template-rows: auto;
@@ -399,18 +397,13 @@
                 width: 100%;
                 padding: 0 4px;
             }
-            .card-item { 
-                max-height: none; 
-                width: 100%; 
-                height: auto; 
-                aspect-ratio: 6 / 8 !important; 
-            }
+            .card-item { max-height: none; width: 100%; height: auto; }
 
-            /* 燈箱在直式裝置下改為覆蓋全螢幕的固定層 */
             #lightbox-overlay { padding: 15px; border-radius: 24px; overflow-y: auto; position: fixed; height: 100vh; }
             .lightbox-content { flex-direction: column; gap: 15px; justify-content: flex-start; height: auto; }
             
-            .lightbox-left { height: auto; max-height: none; width: 100%; }
+            /* 直式下改回原本的流式寬度配比 */
+            .lightbox-left { width: 100%; max-width: none; height: auto; max-height: none; }
             .lightbox-card-wrapper { width: 100%; max-width: 82%; }
             .lightbox-card { 
                 width: 100%; 
@@ -423,7 +416,7 @@
             .prev-card-btn { left: -42px; }
             .next-card-btn { right: -42px; }
 
-            .lightbox-right { height: auto; max-height: none; padding: 20px; padding-bottom: 60px; width: 100%; overflow-y: visible; margin-bottom: 30px;}
+            .lightbox-right { width: 100%; height: auto; max-height: none; padding: 20px; padding-bottom: 60px; overflow-y: visible; margin-bottom: 30px;}
             
             .info-title { font-size: 20px; margin-bottom: 10px; }
             .info-meta { font-size: 12px; }
