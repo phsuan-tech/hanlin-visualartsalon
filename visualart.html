@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 翰林國中藝術視覺沙龍 - 臺灣藝術家社群圖卡展示</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ─── 🎨 日系清爽空氣感背景 ─── */
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: #fdfbf7;
+        }
+        body { 
+            display: flex; 
+            flex-direction: column; 
+            font-family: "Noto Serif TC", "Songti TC", serif; 
+            background: radial-gradient(circle at 10% 20%, rgba(244, 237, 222, 0.4) 0%, rgba(253, 251, 247, 1) 90%);
+            background-color: #fdfbf7;
+            height: 100vh; 
+            overflow: hidden; 
+            color: #4a3e3d; 
+            padding: 20px; 
+            box-sizing: border-box; 
+        }
+
+        /* ─── 🎨 頂部標題欄（🚀 已移除多餘的星星裝飾） ─── */
+        #main-header { 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px 40px; 
+            border-radius: 30px; 
+            border: 1.5px solid #eae1d4; 
+            margin-bottom: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+            flex-shrink: 0; 
+            position: relative;
+        }
+        #main-header .sub-title { 
+            font-size: 13px; 
+            color: #e59a7d; 
+            letter-spacing: 3px; 
+            margin-bottom: 4px; 
+            font-weight: bold; 
+        }
+        #main-header .main-title { 
+            font-size: 20px; 
+            color: #4a3e3d; 
+            font-weight: 700; 
+            margin: 0; 
+            letter-spacing: 1px; 
+        }
+        
+        #main-content { flex: 1; display: flex; width: 100%; overflow: hidden; position: relative; }
+
+        /* ─── 🎨 主舞台容器 ─── */
+        #gallery-container {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.6); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1.5px solid #eae1d4;
+            border-radius: 35px; 
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto; 
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+        }
+
+        /* 橫式大螢幕固定 6x4 網格佈局 */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr); 
+            grid-template-rows: repeat(4, 1fr);    
+            gap: 15px;
+            width: 100%;
+            height: 100%;
+            max-width: 1150px;
+            max-height: calc(100vh - 170px); 
+            margin: 0 auto;
+            align-items: center;
+            justify-items: center;
+        }
+
+        /* ─── 🎨 基礎卡牌樣式 ─── */
+        .card-item {
+            perspective: 1000px;
+            height: 100%;
+            width: auto;
+            max-height: calc((100vh - 240px) / 4); 
+            aspect-ratio: 6 / 8; 
+            box-sizing: border-box;
+        }
+        
+        .card-item.active-card {
+            cursor: pointer;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-style: preserve-3d;
+            border-radius: 16px; 
+            box-shadow: 0 4px 10px rgba(165, 153, 140, 0.1); 
+        }
+        
+        .card-item.active-card:hover .card-inner {
+            transform: translateY(-5px) scale(1.03); 
+            box-shadow: 0 10px 20px rgba(165, 153, 140, 0.2);
+        }
+        
+        .card-inner.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1.5px solid #eae1d4;
+            background: #fffbf5; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        
+        .card-item.empty-card .card-face {
+            border: 1.5px dashed #decbb7;
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .card-face img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+        }
+
+        /* 卡牌首頁底部文字標籤 */
+        .card-info-tag {
+            position: absolute;
+            bottom: 8px; left: 8px; right: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #eae1d4;
+            color: #5c4e4d;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px;
+            border-radius: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            z-index: 10;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        /* ─── 🎨 霧面毛玻璃放大遮罩層 ─── */
+        #lightbox-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(253, 251, 247, 0.75); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 35px;
+            z-index: 500;
+            display: none; 
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .lightbox-content {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            gap: 50px;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* 左側：放大卡牌容器與控制 */
+        .lightbox-left {
+            flex: 1;
+            height: 100%;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+        }
+        
+        .lightbox-card-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .lightbox-card {
+            width: 100%;
+            height: 100%;
+            max-height: 500px;
+            aspect-ratio: 6 / 8;
+            box-shadow: 0 15px 35px rgba(165, 153, 140, 0.25); 
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* 左右跳轉按鈕 */
+        .side-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ffffff;
+            color: #8c7e7c;
+            border: 1.5px solid #eae1d4;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 600;
+            box-shadow: 0 4px 10px rgba(165, 153, 140, 0.15);
+        }
+        .side-nav-btn:hover {
+            background: #fffbf5;
+            color: #e59a7d;
+            border-color: #decbb7;
+            transform: translateY(-50%) scale(1.08);
+        }
+        .prev-card-btn { left: -65px; } 
+        .next-card-btn { right: -65px; } 
+
+        /* 底部按鈕群組容器 */
+        .lightbox-action-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        /* 點擊翻轉防呆按鈕 */
+        .flip-hint-btn {
+            background: #9fb89b; 
+            color: #ffffff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(159, 184, 155, 0.3);
+        }
+        .flip-hint-btn:hover {
+            background: #8fa88b;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(159, 184, 155, 0.4);
+        }
+
+        /* 右側：文字介紹欄 */
+        .lightbox-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            border: 1.5px solid #eae1d4;
+            border-radius: 28px;
+            padding: 35px;
+            padding-bottom: 60px; 
+            height: 100%;
+            max-height: 75vh;
+            box-sizing: border-box;
+            overflow-y: auto;
+            box-shadow: 0 6px 20px rgba(165, 153, 140, 0.08);
+        }
+        .info-title { 
+            font-size: 26px; 
+            font-weight: 700; 
+            color: #4a3e3d; 
+            margin-bottom: 15px; 
+            border-bottom: 2px dashed #eae1d4; 
+            padding-bottom: 12px; 
+        }
+        .info-meta { 
+            font-size: 14px; 
+            color: #e59a7d; 
+            margin-bottom: 8px; 
+            font-weight: bold; 
+            background: #fff5f2; 
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 8px;
+            align-self: flex-start;
+        }
+        .info-desc { 
+            font-size: 15px; 
+            line-height: 1.9; 
+            text-align: justify; 
+            color: #5c4e4d; 
+            margin-top: 15px; 
+            white-space: pre-wrap; 
+        }
+
+        /* 橫式大螢幕：返回首頁按鈕固定在視窗右下角 */
+        .back-btn {
+            position: fixed;
+            bottom: 64px;
+            right: 64px;
+            background: #e59a7d; 
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(229, 154, 125, 0.3);
+            transition: all 0.2s ease;
+            z-index: 700; 
+        }
+        .back-btn:hover {
+            background: #d68b6e;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(229, 154, 125, 0.45);
+        }
+
+        /* 左下角狀態字體 */
+        #sync-status {
+            position: absolute;
+            bottom: 25px;
+            left: 45px;
+            font-size: 12px;
+            color: #a89a98;
+            font-weight: bold;
+        }
+
+        /* ─── 📱 RWD 與直式畫面滑動優化 ─── */
+        @media (max-width: 900px), (orientation: portrait) {
+            body { 
+                height: auto; 
+                overflow-y: auto; 
+                overflow-x: hidden;
+                padding: 10px; 
+            } 
+            #main-content { 
+                height: auto; 
+                overflow: visible; 
+            }
+
+            #main-header { padding: 10px 15px; margin-bottom: 10px; border-radius: 20px; }
+            #main-header .sub-title { font-size: 11px; }
+            #main-header .main-title { font-size: 14px; }
+
+            /* 主舞台隨格子數量自動延伸 */
+            #gallery-container { 
+                padding: 15px; 
+                border-radius: 24px; 
+                height: auto; 
+                overflow: visible; 
+                align-items: flex-start;
+            }
+            
+            /* 直式畫面雙欄佈局 */
+            .grid-layout {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: auto;
+                max-height: none;
+                gap: 12px;
+                height: auto;
+            }
+            .card-item { max-height: none; width: 100%; height: auto; }
+
+            /* 燈箱在直式裝置下改為覆蓋全螢幕的固定層 */
+            #lightbox-overlay { padding: 15px; border-radius: 24px; overflow-y: auto; position: fixed; height: 100vh; }
+            .lightbox-content { flex-direction: column; gap: 15px; justify-content: flex-start; height: auto; }
+            
+            .lightbox-left { height: auto; max-height: none; width: 100%; }
+            .lightbox-card-wrapper { width: 100%; max-width: 82%; }
+            .lightbox-card { 
+                width: 100%; 
+                height: auto; 
+                max-height: none; 
+                aspect-ratio: 6 / 8 !important; 
+            }
+            
+            .side-nav-btn { width: 34px; height: 34px; font-size: 12px; }
+            .prev-card-btn { left: -42px; }
+            .next-card-btn { right: -42px; }
+
+            .lightbox-right { height: auto; max-height: none; padding: 20px; padding-bottom: 60px; width: 100%; overflow-y: visible; margin-bottom: 30px;}
+            
+            .info-title { font-size: 20px; margin-bottom: 10px; }
+            .info-meta { font-size: 12px; }
+            .info-desc { font-size: 14px; }
+            
+            .back-btn { 
+                position: static; 
+                width: auto;
+                border-radius: 20px;
+                padding: 10px 22px;
+                font-size: 13px;
+                box-shadow: 0 4px 10px rgba(229, 154, 125, 0.3);
+            }
+            .flip-hint-btn {
+                padding: 10px 18px;
+                font-size: 13px;
+            }
+            #sync-status { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="main-header">
+        <div class="sub-title">2026 翰林國中藝術視覺沙龍</div>
+        <h1 class="main-title">穿越古今-臺灣藝術家社群圖卡設計工作坊展示</h1>
+    </header>
+
+    <main id="main-content">
+        <section id="gallery-container">
+            <div class="grid-layout" id="grid-view"></div>
+
+            <div id="sync-status">雲端圖卡同步中...</div>
+
+            <div id="lightbox-overlay">
+                <div class="lightbox-content">
+                    <div class="lightbox-left">
+                        <div class="lightbox-card-wrapper">
+                            <button class="side-nav-btn prev-card-btn" onclick="switchLightboxCard(-1)">◀</button>
+                            
+                            <div class="card-item lightbox-card active-card" onclick="executeCardFlip()">
+                                <div class="card-inner" id="lightbox-card-inner">
+                                    <div class="card-face card-front">
+                                        <img id="lb-img-front" src="" alt="正面">
+                                    </div>
+                                    <div class="card-face card-back">
+                                        <img id="lb-img-back" src="" alt="背面">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="side-nav-btn next-card-btn" onclick="switchLightboxCard(1)">▶</button>
+                        </div>
+                        
+                        <div class="lightbox-action-row">
+                            <button class="flip-hint-btn" onclick="executeCardFlip()">🔄 點擊翻轉卡牌</button>
+                            <button class="back-btn" onclick="closeLightbox()">🏠 返回首頁</button>
+                        </div>
+                    </div>
+                    <div class="lightbox-right">
+                        <div class="info-title" id="lb-artist">藝術家姓名</div>
+                        <div class="info-meta" id="lb-author">設計製作：</div>
+                        <div class="info-desc" id="lb-desc">設計介紹載入中...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9aze1wd3LCj9oASKRGpozz6QlWefiDgiki_VRnzzw6ijUqamhTFk5kXxyobLH2-urIAKDVWiWVC4d/pub?output=csv';
+
+    let cardDataList = [];
+    let currentLightboxIndex = -1; 
+
+    function initEmptyGrid() {
+        const gridView = document.getElementById('grid-view');
+        gridView.innerHTML = '';
+        for (let i = 0; i < 24; i++) {
+            const emptyCard = document.createElement('div');
+            emptyCard.className = 'card-item empty-card'; 
+            emptyCard.innerHTML = `
+                <div class="card-inner">
+                    <div class="card-face card-front"></div>
+                </div>
+            `;
+            gridView.appendChild(emptyCard);
+        }
+    }
+
+    function parseCSV(text) {
+        let lines = [];
+        let row = [""];
+        let inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+            let c = text[i];
+            let next = text[i+1];
+            if (c === '"') {
+                if (inQuotes && next === '"') { row[row.length - 1] += '"'; i++; }
+                else { inQuotes = !inQuotes; }
+            } else if (c === ',' && !inQuotes) {
+                row.push('');
+            } else if ((c === '\r' || c === '\n') && !inQuotes) {
+                if (c === '\r' && next === '\n') { i++; }
+                lines.push(row);
+                row = [''];
+            } else {
+                row[row.length - 1] += c;
+            }
+        }
+        if (row.length > 1 || row[0] !== '') lines.push(row);
+        return lines;
+    }
+
+    async function loadCloudGalleryData() {
+        try {
+            const response = await fetch(SHEET_URL);
+            const text = await response.text();
+            const rows = parseCSV(text);
+            
+            let tempCards = [];
+            rows.forEach((cells, index) => {
+                if(index > 0 && cells && cells.some(cell => cell && cell.trim() !== '')) {
+                    if (cells[0] === "製作人姓名" || cells[1] === "本土藝術家姓名") return;
+
+                    tempCards.push({
+                        author: cells[0] ? cells[0].trim() : '未填寫',       
+                        artist: cells[1] ? cells[1].trim() : '未命名', 
+                        imgFront: cells[2] ? cells[2].trim() : '', 
+                        imgBack: cells[3] ? cells[3].trim() : '',  
+                        desc: cells[4] ? cells[4].trim() : '暫無設計介紹說明。' 
+                    });
+                }
+            });
+
+            cardDataList = tempCards.slice(0, 24);
+            updateGalleryGrid();
+            
+            if (document.getElementById('lightbox-overlay').style.display === 'block' && currentLightboxIndex !== -1) {
+                fillLightboxData(currentLightboxIndex);
+            }
+
+            document.getElementById('sync-status').innerText = '雲端圖卡同步完成 ✦';
+        } catch (e) {
+            console.error("同步失敗：", e);
+            document.getElementById('sync-status').innerText = '自動同步失敗，請檢查網路';
+        }
+    }
+
+    function updateGalleryGrid() {
+        const gridView = document.getElementById('grid-view');
+        gridView.innerHTML = '';
+
+        for (let i = 0; i < 24; i++) {
+            const cardItem = document.createElement('div');
+            
+            if (i < cardDataList.length) {
+                const card = cardDataList[i];
+                cardItem.className = 'card-item active-card';
+                cardItem.setAttribute('onclick', `openLightbox(${i})`);
+                
+                let imgSrc = card.imgFront ? card.imgFront : (card.imgBack ? card.imgBack : '');
+
+                if (imgSrc) {
+                    cardItem.innerHTML = `
+                        <div class="card-inner">
+                            <div class="card-face card-front">
+                                <img src="${imgSrc}" onerror="this.style.display='none';">
+                                <div class="card-info-tag">${card.artist} (${card.author})</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    cardItem.innerHTML = `
+                        <div class="card-inner">
+                            <div class="card-face card-front">
+                                <div style="font-size:12px; color:#8c7e7c; padding:10px; font-weight:bold;">${card.artist}</div>
+                                <div class="card-info-tag">${card.artist} (${card.author})</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                cardItem.className = 'card-item empty-card';
+                cardItem.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-face card-front"></div>
+                    </div>
+                `;
+            }
+            gridView.appendChild(cardItem);
+        }
+    }
+
+    function fillLightboxData(index) {
+        const card = cardDataList[index];
+        if(!card) return;
+
+        const imgFrontSrc = card.imgFront ? card.imgFront : (card.imgBack ? card.imgBack : '');
+        const imgBackSrc = card.imgBack ? card.imgBack : (card.imgFront ? card.imgFront : '');
+
+        const lbFront = document.getElementById('lb-img-front');
+        const lbBack = document.getElementById('lb-img-back');
+
+        if(imgFrontSrc) { lbFront.src = imgFrontSrc; lbFront.style.display = 'block'; } else { lbFront.style.display = 'none'; }
+        if(imgBackSrc) { lbBack.src = imgBackSrc; lbBack.style.display = 'block'; } else { lbBack.style.display = 'none'; }
+
+        document.getElementById('lb-artist').innerText = card.artist;
+        document.getElementById('lb-author').innerText = `設計製作：${card.author}`;
+        document.getElementById('lb-desc').innerText = card.desc;
+    }
+
+    // 開啟放大燈箱
+    function openLightbox(index) {
+        currentLightboxIndex = index; 
+        fillLightboxData(index);
+
+        document.getElementById('lightbox-card-inner').classList.remove('flipped');
+        document.getElementById('lightbox-overlay').style.display = 'block';
+        
+        document.querySelector('.lightbox-right').scrollTop = 0;
+    }
+
+    function switchLightboxCard(direction) {
+        if (cardDataList.length === 0) return;
+
+        let nextIndex = currentLightboxIndex + direction;
+        if (nextIndex >= cardDataList.length) {
+            nextIndex = 0; 
+        } else if (nextIndex < 0) {
+            nextIndex = cardDataList.length - 1; 
+        }
+
+        currentLightboxIndex = nextIndex;
+
+        document.getElementById('lightbox-card-inner').classList.remove('flipped');
+        fillLightboxData(currentLightboxIndex);
+        
+        document.querySelector('.lightbox-right').scrollTop = 0;
+    }
+
+    function executeCardFlip() {
+        const innerCard = document.getElementById('lightbox-card-inner');
+        innerCard.classList.toggle('flipped');
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox-overlay').style.display = 'none';
+        currentLightboxIndex = -1; 
+    }
+
+    window.onload = () => {
+        initEmptyGrid();          
+        loadCloudGalleryData();   
+        setInterval(loadCloudGalleryData, 20000); 
+    };
+    </script>
+</body>
+</html>
