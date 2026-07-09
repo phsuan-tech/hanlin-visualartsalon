@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2026 翰林國中藝術視覺沙龍 - 臺灣藝術家社群圖卡展示</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght=500;700&display=swap" rel="stylesheet">
     <style>
         /* ─── 🎨 日系清爽空氣感背景 ─── */
         html, body {
@@ -76,7 +76,7 @@
             align-items: flex-start; 
         }
 
-        /* 橫式大螢幕網格佈局（5x4 排版） */
+        /* 橫式大螢幕網格佈局 */
         .grid-layout {
             display: grid;
             grid-template-columns: repeat(5, 1fr); 
@@ -170,7 +170,7 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.04);
         }
 
-        /* ─── 🎨 霧面毛玻璃放大遮罩層（純淨白霧燈箱） ─── */
+        /* ─── 🎨 燈箱遮罩層 ─── */
         #lightbox-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -194,11 +194,10 @@
             position: relative;
         }
 
-        /* 左側：固定卡牌展示區寬度，解除高度壓縮 */
         .lightbox-left {
             width: 38%;
             max-width: 400px;
-            height: auto; /* 🚀 釋放高度鎖定，由內容寬度等比例撐開 */
+            height: auto; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -215,19 +214,17 @@
             width: 100%;
         }
 
-        /* 🚀 核心優化：放大模式下的圖卡尺寸，完全複製首頁等比例（6:8）僅放大，決不變形裁切 */
         .lightbox-card {
             width: 100%;
             height: auto;
-            max-height: 70vh; /* 🚀 安全視窗高度防護線，防止巨型螢幕爆框 */
-            aspect-ratio: 6 / 8 !important; /* 🚀 強制維持與首頁一致的 6x8 比例 */
+            max-height: 70vh; 
+            aspect-ratio: 6 / 8 !important; 
             box-shadow: 0 15px 35px rgba(165, 153, 140, 0.25); 
         }
         .card-back {
             transform: rotateY(180deg);
         }
 
-        /* 左右跳轉按鈕 */
         .side-nav-btn {
             position: absolute;
             top: 50%;
@@ -256,7 +253,6 @@
         .prev-card-btn { left: -58px; } 
         .next-card-btn { right: -58px; } 
 
-        /* 底部按鈕群組容器 */
         .lightbox-action-row {
             display: flex;
             align-items: center;
@@ -265,7 +261,6 @@
             width: 100%;
         }
 
-        /* 點擊翻轉防呆按鈕 */
         .flip-hint-btn {
             background: #9fb89b; 
             color: #ffffff;
@@ -287,7 +282,6 @@
             box-shadow: 0 6px 15px rgba(159, 184, 155, 0.45);
         }
 
-        /* 右側：文字介紹欄（寬度自動配稱） */
         .lightbox-right {
             width: 62%;
             display: flex;
@@ -331,7 +325,6 @@
             white-space: pre-wrap; 
         }
 
-        /* 橫式大螢幕：返回首頁按鈕固定在視窗右下角 */
         .back-btn {
             position: fixed;
             bottom: 64px;
@@ -354,7 +347,6 @@
             box-shadow: 0 6px 18px rgba(229, 154, 125, 0.45);
         }
 
-        /* 左下角狀態字體 */
         #sync-status {
             position: absolute;
             bottom: 25px;
@@ -364,76 +356,30 @@
             font-weight: bold;
         }
 
-        /* ─── 📱 RWD 與直式畫面滑動優化 ─── */
+        /* ─── 📱 RWD ─── */
         @media (max-width: 900px), (orientation: portrait) {
-            body { 
-                height: auto; 
-                overflow-y: auto; 
-                overflow-x: hidden;
-                padding: 10px; 
-            } 
-            #main-content { 
-                height: auto; 
-                overflow: visible; 
-            }
-
+            body { height: auto; overflow-y: auto; overflow-x: hidden; padding: 10px; } 
+            #main-content { height: auto; overflow: visible; }
             #main-header { padding: 10px 15px; margin-bottom: 10px; border-radius: 20px; }
             #main-header .sub-title { font-size: 11px; }
             #main-header .main-title { font-size: 14px; }
-
-            #gallery-container { 
-                padding: 15px; 
-                border-radius: 24px; 
-                height: auto; 
-                overflow: visible; 
-                align-items: flex-start;
-            }
-            
-            .grid-layout {
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: auto;
-                max-height: none;
-                gap: 12px;
-                height: auto;
-                width: 100%;
-                padding: 0 4px;
-            }
+            #gallery-container { padding: 15px; border-radius: 24px; height: auto; overflow: visible; align-items: flex-start; }
+            .grid-layout { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; max-height: none; gap: 12px; height: auto; width: 100%; padding: 0 4px; }
             .card-item { max-height: none; width: 100%; height: auto; }
-
             #lightbox-overlay { padding: 15px; border-radius: 24px; overflow-y: auto; position: fixed; height: 100vh; }
             .lightbox-content { flex-direction: column; gap: 15px; justify-content: flex-start; height: auto; }
-            
             .lightbox-left { width: 100%; max-width: none; height: auto; max-height: none; }
             .lightbox-card-wrapper { width: 100%; max-width: 82%; }
-            .lightbox-card { 
-                width: 100%; 
-                height: auto; 
-                max-height: none; 
-                aspect-ratio: 6 / 8 !important; 
-            }
-            
+            .lightbox-card { width: 100%; height: auto; max-height: none; aspect-ratio: 6 / 8 !important; }
             .side-nav-btn { width: 34px; height: 34px; font-size: 12px; }
             .prev-card-btn { left: -42px; }
             .next-card-btn { right: -42px; }
-
             .lightbox-right { width: 100%; height: auto; max-height: none; padding: 20px; padding-bottom: 60px; overflow-y: visible; margin-bottom: 30px;}
-            
             .info-title { font-size: 20px; margin-bottom: 10px; }
             .info-meta { font-size: 12px; }
             .info-desc { font-size: 14px; }
-            
-            .back-btn { 
-                position: static; 
-                width: auto;
-                border-radius: 20px;
-                padding: 10px 22px;
-                font-size: 13px;
-                box-shadow: 0 4px 10px rgba(229, 154, 125, 0.3);
-            }
-            .flip-hint-btn {
-                padding: 10px 18px;
-                font-size: 13px;
-            }
+            .back-btn { position: static; width: auto; border-radius: 20px; padding: 10px 22px; font-size: 13px; box-shadow: 0 4px 10px rgba(229, 154, 125, 0.3); }
+            .flip-hint-btn { padding: 10px 18px; font-size: 13px; }
             #sync-status { display: none; }
         }
     </style>
@@ -487,12 +433,15 @@
     </main>
 
     <script>
-    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9aze1wd3LCj9oASKRGpozz6QlWefiDgiki_VRnzzw6ijUqamhTFk5kXxyobLH2-urIAKDVWiWVC4d/pub?output=csv';
+    let RAW_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9aze1wd3LCj9oASKRGpozz6QlWefiDgiki_VRnzzw6ijUqamhTFk5kXxyobLH2-urIAKDVWiWVC4d/pubhtml';
+
+    // 🚀 加上時間戳記防快取機制，強迫 Google 每次都吐出最新資料
+    let cacheBuster = `&t=${new Date().getTime()}`;
+    const SHEET_URL = RAW_URL.includes('/pubhtml') ? RAW_URL.replace('/pubhtml', '/pub?output=csv') + cacheBuster : RAW_URL + cacheBuster;
 
     let cardDataList = [];
     let currentLightboxIndex = -1; 
 
-    // 初始化建立 20 張空白底卡 (5x4)
     function initEmptyGrid() {
         const gridView = document.getElementById('grid-view');
         gridView.innerHTML = '';
@@ -508,52 +457,73 @@
         }
     }
 
-    // CSV 解析引擎
-    function parseCSV(text) {
+    function parseCleanCSV(text) {
         let lines = [];
-        let row = [""];
+        let row = [];
+        let currCell = '';
         let inQuotes = false;
+
         for (let i = 0; i < text.length; i++) {
             let c = text[i];
             let next = text[i+1];
+
             if (c === '"') {
-                if (inQuotes && next === '"') { row[row.length - 1] += '"'; i++; }
-                else { inQuotes = !inQuotes; }
+                if (inQuotes && next === '"') {
+                    currCell += '"';
+                    i++;
+                } else {
+                    inQuotes = !inQuotes;
+                }
             } else if (c === ',' && !inQuotes) {
-                row.push('');
+                row.push(currCell);
+                currCell = '';
             } else if ((c === '\r' || c === '\n') && !inQuotes) {
                 if (c === '\r' && next === '\n') { i++; }
+                row.push(currCell);
                 lines.push(row);
-                row = [''];
+                row = [];
+                currCell = '';
             } else {
-                row[row.length - 1] += c;
+                currCell += c;
             }
         }
-        if (row.length > 1 || row[0] !== '') lines.push(row);
+        if (currCell || row.length > 0) {
+            row.push(currCell);
+            lines.push(row);
+        }
         return lines;
     }
 
-    // 載入雲端資料
     async function loadCloudGalleryData() {
         try {
             const response = await fetch(SHEET_URL);
             const text = await response.text();
-            const rows = parseCSV(text);
             
-            let tempCards = [];
-            rows.forEach((cells, index) => {
-                if(index > 0 && cells && cells.some(cell => cell && cell.trim() !== '')) {
-                    if (cells[0] === "製作人姓名" || cells[1] === "本土藝術家姓名") return;
+            if (text.trim().startsWith("<!DOCTYPE") || text.trim().startsWith("<html")) {
+                document.getElementById('sync-status').innerText = '⚠️ 讀取失敗：請至 Google 試算表點擊「共用」，將一般存取權限改為「知道連結的任何人」！';
+                return;
+            }
 
-                    tempCards.push({
-                        author: cells[0] ? cells[0].trim() : '未填寫',       
-                        artist: cells[1] ? cells[1].trim() : '未命名', 
-                        imgFront: cells[2] ? cells[2].trim() : '', 
-                        imgBack: cells[3] ? cells[3].trim() : '',  
-                        desc: cells[4] ? cells[4].trim() : '暫無設計介紹說明。' 
-                    });
+            const rows = parseCleanCSV(text);
+            let tempCards = [];
+            
+            for (let i = 1; i < rows.length; i++) {
+                let cells = rows[i];
+                
+                if (cells && (cells[0] || cells[1])) {
+                    let author   = cells[0] ? cells[0].trim() : '';
+                    let artist   = cells[1] ? cells[1].trim() : '';
+                    let imgFront = cells[2] ? cells[2].trim() : '';
+                    let imgBack  = cells[3] ? cells[3].trim() : '';
+                    let desc     = cells[4] ? cells[4].trim() : '暫無設計介紹說明。';
+
+                    // 如果這一列根本是空的，或者只是標題本身，跳過
+                    if (!author && !artist) continue;
+                    if (author === "製作人姓名" || artist === "本土藝術家姓名") continue;
+
+                    tempCards.push({ author: author || '未填寫', artist: artist || '未命名', imgFront, imgBack, desc });
                 }
-            });
+            }
 
             cardDataList = tempCards.slice(0, 20);
             updateGalleryGrid();
@@ -562,14 +532,17 @@
                 fillLightboxData(currentLightboxIndex);
             }
 
-            document.getElementById('sync-status').innerText = '雲端圖卡同步完成 ✦';
+            if (cardDataList.length === 0) {
+                document.getElementById('sync-status').innerText = '雲端連線成功，但表格內沒有有效資料。';
+            } else {
+                document.getElementById('sync-status').innerText = `雲端圖卡同步完成 ✦ (已載入 ${cardDataList.length} 張圖卡)`;
+            }
         } catch (e) {
             console.error("同步失敗：", e);
             document.getElementById('sync-status').innerText = '自動同步失敗，請檢查網路';
         }
     }
 
-    // 渲染覆蓋至 20 個格子上
     function updateGalleryGrid() {
         const gridView = document.getElementById('grid-view');
         gridView.innerHTML = '';
@@ -588,7 +561,8 @@
                     cardItem.innerHTML = `
                         <div class="card-inner">
                             <div class="card-face card-front">
-                                <img src="${imgSrc}" onerror="this.style.display='none';">
+                                <img src="${imgSrc}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <div style="display:none; font-size:12px; color:#8c7e7c; padding:15px; font-weight:bold; text-align:center;">${card.artist}<br><br>(⚠️ 圖片連結無效)</div>
                                 <div class="card-info-tag">${card.artist} (${card.author})</div>
                             </div>
                         </div>
@@ -597,7 +571,7 @@
                     cardItem.innerHTML = `
                         <div class="card-inner">
                             <div class="card-face card-front">
-                                <div style="font-size:12px; color:#8c7e7c; padding:10px; font-weight:bold;">${card.artist}</div>
+                                <div style="font-size:12px; color:#8c7e7c; padding:15px; font-weight:bold; text-align:center;">${card.artist}<br><br>(未附圖片網址)</div>
                                 <div class="card-info-tag">${card.artist} (${card.author})</div>
                             </div>
                         </div>
@@ -615,7 +589,6 @@
         }
     }
 
-    // 填入資料至燈箱
     function fillLightboxData(index) {
         const card = cardDataList[index];
         if(!card) return;
@@ -634,32 +607,25 @@
         document.getElementById('lb-desc').innerText = card.desc;
     }
 
-    // 開啟放大燈箱
     function openLightbox(index) {
         currentLightboxIndex = index; 
         fillLightboxData(index);
-
         document.getElementById('lightbox-card-inner').classList.remove('flipped');
         document.getElementById('lightbox-overlay').style.display = 'block';
-        
         document.querySelector('.lightbox-right').scrollTop = 0;
     }
 
     function switchLightboxCard(direction) {
         if (cardDataList.length === 0) return;
-
         let nextIndex = currentLightboxIndex + direction;
         if (nextIndex >= cardDataList.length) {
             nextIndex = 0; 
         } else if (nextIndex < 0) {
             nextIndex = cardDataList.length - 1; 
         }
-
         currentLightboxIndex = nextIndex;
-
         document.getElementById('lightbox-card-inner').classList.remove('flipped');
         fillLightboxData(currentLightboxIndex);
-        
         document.querySelector('.lightbox-right').scrollTop = 0;
     }
 
